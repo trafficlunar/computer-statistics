@@ -1,6 +1,7 @@
 use std::error::Error;
 
 mod websocket;
+mod notifications;
 
 fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv()?;
