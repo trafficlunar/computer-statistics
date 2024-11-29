@@ -22,6 +22,8 @@ pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Er
 pub fn send(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>, cpu: u8, ram: u8) {
     let message = format!("{{ \"cpu\": {}, \"ram\": {} }}", cpu, ram);
 
+    println!("Sending to WebSocket: {}", message);
+
     socket
         .send(Message::Text(message))
         .unwrap();
