@@ -43,10 +43,17 @@ pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Er
     Ok(socket)
 }
 
-pub fn send(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>, cpu: u8, ram: u8, key_presses: u16) {
+pub fn send(
+    socket: &mut WebSocket<MaybeTlsStream<TcpStream>>,
+    cpu: u8,
+    ram: u8,
+    key_presses: u16,
+    left_clicks: u16,
+    right_clicks: u16,
+) {
     let message = format!(
-        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {} }}",
-        cpu, ram, key_presses
+        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {}, \"left_clicks\": {}, \"right_clicks\": {} }}",
+        cpu, ram, key_presses, left_clicks, right_clicks
     );
 
     println!("Sending to WebSocket: {}", message);
