@@ -1,2 +1,10 @@
 # computer
-Sends my computer's statistics to my website's backend that is shown as a graph on my website
+
+Sends statistics of my computer to my [API](https://github.com/trafficlunar/api) that can be seen on my [website](https://github.com/trafficlunar/website)
+
+## features
+
+- CPU usage
+- Memory usage
+- Key press counter
+- Left and right mouse clicks counter
