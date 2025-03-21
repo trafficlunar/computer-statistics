@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 dotenvy = "0.15.7"
+inputbot = "0.6.0"
 notify-rust = "4.11.3"
 sysinfo = "0.32.1"
 tungstenite = "0.24.0"

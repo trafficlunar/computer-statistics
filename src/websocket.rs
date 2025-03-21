@@ -1,17 +1,20 @@
 use std::{env, net::TcpStream};
 
-use tungstenite::{handshake::client::generate_key, http::Request, stream::MaybeTlsStream, Message, WebSocket};
+use tungstenite::{
+    handshake::client::generate_key, http::Request, stream::MaybeTlsStream, Message, WebSocket,
+};
 use url::Url;
 
 use crate::notifications;
 
 pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Error> {
-    let websocket_url = Url::parse(&env::var("WEBSOCKET_URL").unwrap()).expect("Invalid WebSocket URL");
+    let websocket_url =
+        Url::parse(&env::var("WEBSOCKET_URL").unwrap()).expect("Invalid WebSocket URL");
     let host = websocket_url.host_str().expect("Host not found in URL");
 
     let host_header = match websocket_url.port() {
         Some(port) => format!("{}:{}", host, port),
-        None => host.to_string()
+        None => host.to_string(),
     };
 
     let request = Request::builder()
@@ -40,12 +43,13 @@ pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Er
     Ok(socket)
 }
 
-pub fn send(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>, cpu: u8, ram: u8) {
-    let message = format!("{{ \"cpu\": {}, \"ram\": {} }}", cpu, ram);
+pub fn send(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>, cpu: u8, ram: u8, key_presses: u16) {
+    let message = format!(
+        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {} }}",
+        cpu, ram, key_presses
+    );
 
     println!("Sending to WebSocket: {}", message);
 
-    socket
-        .send(Message::Text(message))
-        .unwrap();
+    socket.send(Message::Text(message)).unwrap();
 }
