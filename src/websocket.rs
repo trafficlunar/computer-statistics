@@ -47,12 +47,12 @@ pub fn send(
     socket: &mut WebSocket<MaybeTlsStream<TcpStream>>,
     cpu: u8,
     ram: u8,
-    key_presses: u16,
+    keys: u16,
     clicks: u16,
 ) {
     let message = format!(
-        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {}, \"clicks\": {} }}",
-        cpu, ram, key_presses, clicks
+        "{{ \"cpu\": {}, \"ram\": {}, \"keys\": {}, \"clicks\": {} }}",
+        cpu, ram, keys, clicks
     );
 
     println!("Sending to WebSocket: {}", message);

@@ -48,10 +48,10 @@ pub fn start_sending(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>) {
         let used_memory = sys.used_memory();
         let memory_usage = ((used_memory as f64) / (total_memory as f64) * 100.0).floor() as u8;
 
-        let key_presses = key_counter.load(Ordering::SeqCst);
+        let keys = key_counter.load(Ordering::SeqCst);
         let clicks = click_counter.load(Ordering::SeqCst);
 
-        websocket::send(socket, cpu_usage, memory_usage, key_presses, clicks);
+        websocket::send(socket, cpu_usage, memory_usage, keys, clicks);
 
         // Reset counters after sending
         key_counter.store(0, Ordering::SeqCst);
