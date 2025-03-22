@@ -48,12 +48,11 @@ pub fn send(
     cpu: u8,
     ram: u8,
     key_presses: u16,
-    left_clicks: u16,
-    right_clicks: u16,
+    clicks: u16,
 ) {
     let message = format!(
-        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {}, \"left_clicks\": {}, \"right_clicks\": {} }}",
-        cpu, ram, key_presses, left_clicks, right_clicks
+        "{{ \"cpu\": {}, \"ram\": {}, \"key_presses\": {}, \"clicks\": {} }}",
+        cpu, ram, key_presses, clicks
     );
 
     println!("Sending to WebSocket: {}", message);
