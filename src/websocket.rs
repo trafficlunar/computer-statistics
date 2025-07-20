@@ -57,5 +57,5 @@ pub fn send(
 
     println!("Sending to WebSocket: {}", message);
 
-    socket.send(Message::Text(message)).unwrap();
+    socket.send(Message::Text(message.into())).unwrap();
 }
