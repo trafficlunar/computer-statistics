@@ -49,7 +49,7 @@ pub fn send(
     ram: u8,
     keys: u16,
     clicks: u16,
-) {
+) -> Result<(), tungstenite::Error> {
     let message = format!(
         "{{ \"cpu\": {}, \"ram\": {}, \"keys\": {}, \"clicks\": {} }}",
         cpu, ram, keys, clicks
@@ -57,5 +57,5 @@ pub fn send(
 
     println!("Sending to WebSocket: {}", message);
 
-    socket.send(Message::Text(message.into())).unwrap();
+    socket.send(Message::Text(message.into()))
 }

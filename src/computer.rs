@@ -23,6 +23,7 @@ pub fn start_sending(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>) {
     let key_counter_clone = Arc::clone(&key_counter);
     let click_counter_clone = Arc::clone(&click_counter);
 
+    // Keys and clicks handler
     thread::spawn(move || {
         KeybdKey::bind_all(move |_| {
             key_counter_clone.fetch_add(1, Ordering::SeqCst);
@@ -38,6 +39,7 @@ pub fn start_sending(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>) {
         inputbot::handle_input_events();
     });
 
+    // Send to WebSocket every 60 seconds
     loop {
         sys.refresh_cpu_usage();
         sys.refresh_memory();
@@ -51,7 +53,18 @@ pub fn start_sending(socket: &mut WebSocket<MaybeTlsStream<TcpStream>>) {
         let keys = key_counter.load(Ordering::SeqCst);
         let clicks = click_counter.load(Ordering::SeqCst);
 
-        websocket::send(socket, cpu_usage, memory_usage, keys, clicks);
+        match websocket::send(socket, cpu_usage, memory_usage, keys, clicks) {
+            Ok(_) => {
+                // Reset counters after sending
+                key_counter.store(0, Ordering::SeqCst);
+                click_counter.store(0, Ordering::SeqCst);
+            }
+            Err(e) => {
+                eprintln!("Failed to send WebSocket message: {}", e);
+                // Avoid resetting counters because we'll try to resend them after reconnection
+                break; // triggers reconnection in main.rs
+            }
+        }
 
         // Reset counters after sending
         key_counter.store(0, Ordering::SeqCst);
