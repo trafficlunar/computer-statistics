@@ -28,7 +28,7 @@ Restart your computer.
 ## systemd service
 
 ```bash
-$ sudo nano /etc/systemd/system/computer-statistics.service
+$ nano /etc/systemd/system/computer-statistics.service
 ```
 
 ```
@@ -39,9 +39,8 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-User=trafficlunar
-WorkingDirectory=/home/trafficlunar/Projects/computer-statistics
-ExecStart=/home/trafficlunar/Projects/computer-statistics/target/release/computer
+WorkingDirectory=%h/Projects/computer-statistics
+ExecStart=%h/Projects/computer-statistics/target/release/computer
 Environment="RUST_LOG=info"
 
 [Install]
@@ -49,8 +48,8 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-$ sudo systemctl daemon-reload
 $ cargo build --release
-$ sudo systemctl enable --now computer-statistics.service
-$ sudo systemctl status computer-statistics.service
+$ systemctl --user daemon-reload
+$ systemctl --user enable --now computer-statistics.service
+$ systemctl --user status computer-statistics.service
 ```
