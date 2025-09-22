@@ -1,13 +1,18 @@
-use std::{env, net::TcpStream};
+use std::env;
 
-use tungstenite::{
-    handshake::client::generate_key, http::Request, stream::MaybeTlsStream, Message, WebSocket,
+use futures_util::SinkExt;
+use tokio::net::TcpStream;
+use tokio_tungstenite::{
+    connect_async,
+    tungstenite::{handshake::client::generate_key, http::Request, Message},
+    MaybeTlsStream, WebSocketStream,
 };
 use url::Url;
 
 use crate::notifications;
 
-pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Error> {
+pub async fn connect(
+) -> Result<WebSocketStream<MaybeTlsStream<TcpStream>>, tokio_tungstenite::tungstenite::Error> {
     let websocket_url =
         Url::parse(&env::var("WEBSOCKET_URL").unwrap()).expect("Invalid WebSocket URL");
     let host = websocket_url.host_str().expect("Host not found in URL");
@@ -29,7 +34,7 @@ pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Er
         .body(())
         .unwrap();
 
-    let (socket, _) = match tungstenite::connect(request) {
+    let (socket, _) = match connect_async(request).await {
         Ok(ws) => ws,
         Err(err) => {
             eprintln!("Unable to connect to WebSocket: {}", err);
@@ -43,13 +48,13 @@ pub fn connect() -> Result<WebSocket<MaybeTlsStream<TcpStream>>, tungstenite::Er
     Ok(socket)
 }
 
-pub fn send(
-    socket: &mut WebSocket<MaybeTlsStream<TcpStream>>,
+pub async fn send(
+    socket: &mut WebSocketStream<MaybeTlsStream<TcpStream>>,
     cpu: u8,
     ram: u8,
     keys: u16,
     clicks: u16,
-) -> Result<(), tungstenite::Error> {
+) -> Result<(), tokio_tungstenite::tungstenite::Error> {
     let message = format!(
         "{{ \"cpu\": {}, \"ram\": {}, \"keys\": {}, \"clicks\": {} }}",
         cpu, ram, keys, clicks
@@ -57,5 +62,5 @@ pub fn send(
 
     println!("Sending to WebSocket: {}", message);
 
-    socket.send(Message::Text(message.into()))
+    socket.send(Message::Text(message.into())).await
 }

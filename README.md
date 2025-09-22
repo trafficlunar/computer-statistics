@@ -44,7 +44,7 @@ ExecStart=%h/Projects/computer-statistics/target/release/computer
 Environment="RUST_LOG=info"
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ```
 
 ```bash
