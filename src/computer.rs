@@ -60,7 +60,7 @@ pub async fn start_sending(socket: &mut WebSocketStream<MaybeTlsStream<TcpStream
             }
 
             // Read incoming messages
-            match timeout(Duration::from_secs(10), socket.next()).await {
+            match timeout(Duration::from_secs(2), socket.next()).await {
                 Ok(Some(msg)) => match msg {
                     Ok(Message::Pong(_)) => {
                         println!("Received pong");
