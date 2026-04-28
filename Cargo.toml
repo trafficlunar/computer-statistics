@@ -5,10 +5,10 @@ edition = "2021"
 
 [dependencies]
 dotenvy = "0.15.7"
-futures-util = "0.3.31"
+futures-util = "0.3.32"
 inputbot = "0.6.0"
-notify-rust = "4.12.0"
-sysinfo = "0.38.0"
-tokio = { version = "1.49.0", features = ["full"] }
-tokio-tungstenite = { version = "0.28.0", features = ["native-tls"] }
+notify-rust = "4.16.0"
+sysinfo = "0.38.4"
+tokio = { version = "1.52.1", features = ["full"] }
+tokio-tungstenite = { version = "0.29.0", features = ["native-tls"] }
 url = "2.5.8"
